@@ -84,4 +84,4 @@ elérhető az összes felhasználói funkció. A kvízek kategóriák szerint va
 
 
 ## Github
-- [Github link FIXMEEEEEEEEEE]()
+- [Github link](https://github.com/SzPeti8/Web-Project-NextUI)
