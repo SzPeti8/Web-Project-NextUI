@@ -25,6 +25,9 @@ export default function NickName(userid: { string: any }) {
     const [Button1_DefaultValue, setButton1_DefaultValue] = useState("");
     const [Button2_DefaultValue, setButton2_DefaultValue] = useState("");
     const [isExist, setIsexist] = useState(false)
+    const [isDeleteAllVisible, setisDeleteAllVisible] = useState(true)
+    const [isSaveVisible, setisSaveVisible] = useState(true)
+    const [isDeleteOneVisible, setisDeleteOneVisible] = useState(true)
 
     async function fetchData() {
         try {
@@ -54,14 +57,21 @@ export default function NickName(userid: { string: any }) {
             setItems(allItems as RecordModel[]);
             if (allItems.length > 0) {
                 setIsexist(true)
+                setisDeleteAllVisible(false)
                 if(allItems[0].user_nickname1.toString()!=""){
                     setButton1_DefaultValue(allItems[0].user_nickname1.toString())
                     setisSecondInputVisible(false)
+                    
                 }
                 
                 if(allItems[0].user_nickname2.toString()!=""){
                     setButton2_DefaultValue(allItems[0].user_nickname2.toString())
+                    setisDeleteOneVisible(false)
                 }
+               
+            }
+            else{
+                setisSecondInputVisible(true)
             }
             
         } catch (error) {
@@ -81,6 +91,11 @@ export default function NickName(userid: { string: any }) {
 
             value
         );
+        if(value == ""){
+            setisSaveVisible(true);
+            setisSecondInputVisible(true)
+        }
+        else{setisSaveVisible(false);setisSecondInputVisible(false) }
     }
     const handleInputChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -88,12 +103,16 @@ export default function NickName(userid: { string: any }) {
 
             value
         );
+        if(value == ""){
+            setisDeleteOneVisible(true)
+        }
+        else{
+            setisDeleteOneVisible(false)
+            setisSaveVisible(false)
+        }
     }
     const handleSubmitNick = async () => {
-        console.log(items)
-        console.log("Sunmitt")
-        console.log(Button1_DefaultValue)
-
+        
         try {
             const data = {
                 "user_id": userid.string,
@@ -117,6 +136,37 @@ export default function NickName(userid: { string: any }) {
         }
     };
 
+    async function handleDelete() {
+        
+        await pb.collection('nickNames').delete(items[0].id);
+        setButton1_DefaultValue("")
+        setButton2_DefaultValue("")
+        setisDeleteAllVisible(true)
+        fetchData
+        setIsexist(false)
+        setisSaveVisible(true)
+        setisDeleteOneVisible(true)
+
+    }
+
+    async function handleDelete2() {
+        setButton2_DefaultValue("")
+        const data = {
+            "user_id": userid.string,
+            "user_nickname1": Button1_DefaultValue,
+            "user_nickname2": ""
+        };
+        if (isExist) {
+                
+            const record = await pb.collection('nickNames').update(items[0].id, data);
+            console.log("Record UPDATED:", record); // Sikeres update után a válasz
+            
+        }
+        setisDeleteOneVisible(true)
+        
+
+
+    }
 
     return (
         <form >
@@ -126,10 +176,16 @@ export default function NickName(userid: { string: any }) {
                     <div className="flex flex-col gap-2">
                         <h3 className="text-default-500 text-small">Becenevek: </h3>
                         <Input value={Button1_DefaultValue} onChange={handleInputChange1} placeholder="Becenév 1" />
-                        <Button size="sm" color="danger" onPress={() => { console.log(items); handleSubmitNick() }} >
-                            Törlés
+                        <Button isDisabled ={isSaveVisible} size="sm" color="success" onPress={() => {  handleSubmitNick() }} >
+                            Mentés
+                        </Button>
+                        <Button isDisabled ={isDeleteAllVisible} size="sm" color="danger" onPress={() => { handleDelete() }} >
+                            Összes törlése
                         </Button>
                         <Input isDisabled={isSecondInputVisible} value={Button2_DefaultValue} onChange={handleInputChange2} placeholder="Becenév 2" />
+                        <Button isDisabled ={isDeleteOneVisible} size="sm" color="danger" onPress={() => { handleDelete2() }} >
+                            Törlés
+                        </Button>
                     </div >
 
                 </div>
