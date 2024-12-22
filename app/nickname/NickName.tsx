@@ -146,6 +146,7 @@ export default function NickName(userid: { string: any }) {
         setIsexist(false)
         setisSaveVisible(true)
         setisDeleteOneVisible(true)
+        setisSecondInputVisible(true)
 
     }
 
@@ -175,16 +176,20 @@ export default function NickName(userid: { string: any }) {
                 <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
                     <div className="flex flex-col gap-2">
                         <h3 className="text-default-500 text-small">Becenevek: </h3>
+                        <div>
                         <Input value={Button1_DefaultValue} onChange={handleInputChange1} placeholder="Becenév 1" />
-                        <Button isDisabled ={isSaveVisible} size="sm" color="success" onPress={() => {  handleSubmitNick() }} >
-                            Mentés
-                        </Button>
                         <Button isDisabled ={isDeleteAllVisible} size="sm" color="danger" onPress={() => { handleDelete() }} >
                             Összes törlése
                         </Button>
+                        </div>
+                        <div>
                         <Input isDisabled={isSecondInputVisible} value={Button2_DefaultValue} onChange={handleInputChange2} placeholder="Becenév 2" />
                         <Button isDisabled ={isDeleteOneVisible} size="sm" color="danger" onPress={() => { handleDelete2() }} >
                             Törlés
+                        </Button>
+                        </div>
+                        <Button isDisabled ={isSaveVisible} size="sm" color="success" onPress={() => {  handleSubmitNick() }} >
+                            Mentés
                         </Button>
                     </div >
 
