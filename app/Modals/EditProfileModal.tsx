@@ -15,6 +15,7 @@ import Image from "next/image";
 import avatarImages from '../assets/avatarImages';
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import { toasterror, toastsuccess, toastwarn } from '../toasthelper';
+import NickName from '../nickname/NickName'
 
 const predefinedImageKeys = [
   "avatar1",
@@ -77,13 +78,13 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
 
     try {
       await updateProfile({ username, profile_picture: selectedImageKey });
-      
-      toastsuccess("Sikeres szerkesztés",SuccesOptions)
+
+      toastsuccess("Sikeres szerkesztés", SuccesOptions)
       onClose();
     } catch (error) {
       console.error("Profil szerkesztési hiba:", error);
       //alert("Hiba történt a profil szerkesztésekor. Lehet, hogy létezik már azonos névvel felhasználó.");
-      toasterror("Hiba történt a profil szerkesztésekor.\nLehet, hogy létezik már azonos névvel felhasználó.",ErrorOptions)
+      toasterror("Hiba történt a profil szerkesztésekor.\nLehet, hogy létezik már azonos névvel felhasználó.", ErrorOptions)
     } finally {
       setIsSubmitting(false);
     }
@@ -136,6 +137,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
+                <NickName string={user?.id} ></NickName>
               </div>
             </ModalBody>
             <ModalFooter>
@@ -154,18 +156,6 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ isOpen, onClose }) 
           </form>
         </ModalContent>
       </Modal>
-      {/* <ToastContainer stacked limit={5}
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          /> */}
     </div>
   );
 };
